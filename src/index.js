@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { nullLiteral } from '@babel/types';
 
 function Square(props) {
   return (
@@ -50,6 +49,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        order: null,
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -67,6 +67,7 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{
         squares: squares,
+        order: i,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -86,8 +87,9 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
+      const coordinate = showCoordinate(history[move].order)
       const desc = move ?
-        'Go to move #' + move :
+        'Go to move #' + move + '(col: ' + coordinate[0] + ', row: ' + coordinate[1] + ')' :
         'Go to game start';
       return (
         <li key={move}>
@@ -142,4 +144,20 @@ function calculateWinner(squares) {
     }
   }
   return null;
+}
+
+function showCoordinate(n) {
+  // eslint-disable-next-line default-case
+  switch(n) {
+    case null: return [null, null]
+    case 0: return [1, 1]
+    case 1: return [2, 1]
+    case 2: return [3, 1]
+    case 3: return [1, 2]
+    case 4: return [2, 2]
+    case 5: return [3, 2]
+    case 6: return [1, 3]
+    case 7: return [2, 3]
+    case 8: return [3, 3]
+  }
 }
