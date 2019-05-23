@@ -48,6 +48,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      orderIsAsc: true,
     };
   }
 
@@ -76,12 +77,19 @@ class Game extends React.Component {
     });
   }
 
+  switchOrder() {
+    this.setState({
+      orderIsAsc: !this.state.orderIsAsc,
+    });
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
+    const moves = history.map((step, n) => {
+      const move = this.state.orderIsAsc ? n : [...Array(history.length).keys()].reverse()[n]
       const coordinate = showCoordinate(history[move].order)
       const desc = move ?
         'Go to move #' + move + '(col: ' + coordinate[0] + ', row: ' + coordinate[1] + ')' :
@@ -111,6 +119,7 @@ class Game extends React.Component {
         <div className="game-info">
           <div>{status}</div>
           <ol>{moves}</ol>
+          <ol><li><button onClick={() => this.switchOrder()}>Switch Order</button></li></ol>
         </div>
       </div>
     );
